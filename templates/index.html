@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management Portal</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #f4f4f4; }
+        form input { margin: 5px; padding: 8px; }
+        button { padding: 8px 15px; background-color: #28a745; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <h2>Add New Employee Details</h2>
+    <form action="/add" method="POST">
+        <input type="text" name="emp_id" placeholder="Employee ID" required>
+        <input type="text" name="name" placeholder="Full Name" required>
+        <input type="text" name="role" placeholder="Job Role" required>
+        <input type="email" name="email" placeholder="Email Address" required>
+        <input type="text" name="address" placeholder="Address">
+        <input type="text" name="mobile" placeholder="Mobile Number">
+        <button type="submit">Save Employee</button>
+    </form>
+
+    <hr>
+
+    <h3>Employee List</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Emp ID</th>
+                <th>Name</th>
+                <th>Role</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>Mobile</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for emp in employees %}
+            <tr>
+                <td>{{ emp.id }}</td>
+                <td>{{ emp.emp_id }}</td>
+                <td>{{ emp.name }}</td>
+                <td>{{ emp.role }}</td>
+                <td>{{ emp.email }}</td>
+                <td>{{ emp.address }}</td>
+                <td>{{ emp.mobile }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>
