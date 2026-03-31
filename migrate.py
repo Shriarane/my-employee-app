@@ -1,26 +1,31 @@
 import sqlite3
+import os
 from supabase import create_client
+from dotenv import load_dotenv
 
-# Yahan apni details paste karo
-SUPABASE_URL = "https://jhhxjthrpdngwxpuodgq.supabase.co"
-SUPABASE_KEY = "sb_secret_rbT1M125PxwbOwPyauRGhQ_wCvRRSZM"
+# Load credentials
+load_dotenv()
 
-supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+URL = os.getenv("SUPABASE_URL")
+KEY = os.getenv("SUPABASE_KEY")
+supabase = create_client(URL, KEY)
 
 def migrate_to_cloud():
+    db_path = 'employees.db'
+    
+    if not os.path.exists(db_path):
+        print("Error: SQLite file 'employees.db' nahi mili!")
+        return
+
     try:
-        # SQLite se data read karna
-        conn = sqlite3.connect('employees.db')
+        # SQLite connect karna
+        conn = sqlite3.connect(db_path)
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         
-        # Check if table exists
+        # Data fetch karna
         rows = cursor.execute("SELECT * FROM employees").fetchall()
         
-        if not rows:
-            print("No data found in SQLite to migrate.")
-            return
-
         print(f"Starting Secure Migration of {len(rows)} records...")
 
         for row in rows:
@@ -32,11 +37,11 @@ def migrate_to_cloud():
                 "address": row["address"],
                 "mobile": row["mobile"]
             }
-            # Secure API Insert
+            # Secure API Insert to Cloud
             supabase.table("employees").insert(payload).execute()
-            print(f"Successfully migrated: {row['name']}")
+            print(f"Migrated: {row['name']}")
             
-        print("\n--- MIGRATION SUCCESSFUL: Check Supabase Table Editor! ---")
+        print("\n--- SUCCESS: Data is now on Supabase Cloud! ---")
         
     except Exception as e:
         print(f"Migration Failed: {e}")
